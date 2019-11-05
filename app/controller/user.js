@@ -51,8 +51,9 @@ class UserController extends Controller {
 			})
 			// this.ctx.status = 201
 		} catch (err) {
-			// this.error(err)
-			this.error("Create User Failed")
+			console.log(err);
+			this.error(err);
+			// this.error("Create User Failed")
 		}
 	}
 

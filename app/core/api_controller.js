@@ -58,31 +58,34 @@ class ApiController extends Controller {
     }
   }
 
-  success(data) {
+  success(data, retcode = 200) {
 
     if (!data) {
       return this.error('The data you requested does not exist.')
     }
 
     this.ctx.body = {
+      retcode,
       status: 'success',
       data
     }
   }
 
-  error(massage) {
+  error(msg, retcode = 40000) {
 
     this.ctx.body = {
+      retcode,
       status: 'error',
-      massage: massage || 'Unknown error.'
+      msg: msg || 'Unknown error.'
     }
   }
 
-  unauthorized(massage) {
+  unauthorized(msg, retcode = 40000) {
 
     this.ctx.body = {
+      retcode,
       status: 'unauthorized',
-      massage: massage || 'Please login before your further operation.'
+      msg: msg || 'Please login before your further operation.'
     }
   }
 
