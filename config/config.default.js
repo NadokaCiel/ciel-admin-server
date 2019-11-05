@@ -19,7 +19,7 @@ module.exports = appInfo => {
   config.middleware = [];
 
   config.mongoose = {
-    url: 'mongodb://localhost:27017/ciel',
+    url: 'mongodb://127.0.0.1:27017/ciel',
     options: {}
   }
 
@@ -35,8 +35,14 @@ module.exports = appInfo => {
 
   config.security = {
     csrf: {
-      enable: false,
-    }
+      enable: false, // 暂时禁用掉 csrf，错误信息：403 missing csrf token
+    },
+    domainWhiteList: [ '*' ]
+  }
+
+  config.cors = {
+    origin: ['http://localhost:8080'],
+    credentials: true,
   }
 
   // add your user config here
