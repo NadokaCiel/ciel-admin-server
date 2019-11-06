@@ -88,6 +88,8 @@ class UserController extends Controller {
 				return this.error("Username already used")
 			}
 
+			data.update_time = Date.now()
+
 			const user = await this.ctx.model.User.findOneAndUpdate({
 				id: data.id
 			}, data, {

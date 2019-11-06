@@ -33,9 +33,6 @@ class TokenController extends Controller {
 			const token = this.encryption(name + now)
 			const auth = this.encryption(name)
 
-			console.log('auth', auth);
-			console.log('this.app.redis', JSON.stringify(this.app));
-
 			await this.app.redis.set(token, user.id, 'EX', 7 * 24 * 60 * 60 * 1000)
 			this.ctx.cookies.set('token', token, {
 				maxAge: 7 * 24 * 60 * 60 * 1000,

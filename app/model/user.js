@@ -10,6 +10,9 @@ module.exports = app => {
 			type: Date,
 			default: Date.now
 		},
+		update_time: {
+			type: Date
+		},
 		password: {
 			type: String,
 			Required: 'Kindly enter the password of the user'

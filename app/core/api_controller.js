@@ -35,26 +35,24 @@ class ApiController extends Controller {
 
   async getId(type) {
 
-    const {
-      Ids
-    } = this.ctx.model
     try {
-      const idData = await Ids.findOne()
-      if (!idData[type] && idData[type] !== 0) {
-        const newIds = {}
-        newIds[type] = 0
-        await Ids.update({}, {
-          $set: newIds
-        }, {
-          multi: 1
+      const ids = await this.ctx.model.Ids.findOne({
+        name: type
+      })
+      if (!ids) {
+        let new_ids =  new this.ctx.model.Ids({
+          name: type,
         })
+        new_ids = await new_ids.save()
+        return new_ids.nowId
+      } else {
+        ids.nowId++
+        ids.update_time = Date.now()
+        await ids.save()
+        return ids.nowId
       }
-      idData[type]++
-      await idData.save()
-      return idData[type]
     } catch (err) {
       throw new Error(err)
-      return
     }
   }
 
@@ -71,7 +69,7 @@ class ApiController extends Controller {
     }
   }
 
-  error(msg, retcode = 40000) {
+  error(msg, retcode = 40001) {
 
     this.ctx.body = {
       retcode,
