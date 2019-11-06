@@ -4,7 +4,7 @@ module.exports = app => {
 		id: Number,
 		user_name: {
 			type: String,
-			Required: 'Kindly enter the name of the name'
+			Required: 'Kindly enter the name of the user'
 		},
 		create_time: {
 			type: Date,

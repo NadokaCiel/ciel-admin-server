@@ -56,6 +56,35 @@ class ApiController extends Controller {
     }
   }
 
+  async getUser() {
+    const token = this.ctx.cookies.get('token')
+
+    if (!token) {
+      return null
+    }
+    let id = await this.app.redis.get(token)
+
+    console.log('id', id);
+    if (!id) {
+      return null
+    }
+
+    const user = await this.ctx.model.User.findOne({
+      id
+    }).select('-password')
+
+    console.log('user', user);
+
+    if (!user) {
+      return null
+    }
+
+    return {
+      id: user.id,
+      user_name: user.user_name
+    }
+  }
+
   success(data, retcode = 200) {
 
     if (!data) {
