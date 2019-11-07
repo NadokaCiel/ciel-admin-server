@@ -10,6 +10,9 @@ module.exports = app => {
 			type: String,
 			Required: 'Kindly enter the author of the article'
 		},
+		tag: {
+			type: Array,
+		},
 		content: {
 			type: String,
 			Required: 'Kindly enter the content of the article'

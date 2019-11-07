@@ -12,7 +12,7 @@ const createRule = {
 		required: true
 	},
 	tag: {
-		type: 'string',
+		type: 'array',
 		required: false
 	},
 }
@@ -35,7 +35,7 @@ const updateRule = {
 		required: true
 	},
 	tag: {
-		type: 'string',
+		type: 'array',
 		required: false
 	},
 }
