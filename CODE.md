@@ -3,3 +3,5 @@
 40001    normal error
 40002    params error
 40003    sign error
+
+41000    ticket error

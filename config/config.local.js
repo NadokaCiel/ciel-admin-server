@@ -15,8 +15,9 @@ module.exports = appInfo => {
   // use for cookie sign key, should change to your own and keep security
   config.keys = appInfo.name + '_nadoka';
 
-  config.appId = 'ciel-admin'
+  config.appId = 'wx919c2fdcbbd9b3af'
   config.appKey = 'ciel'
+  config.appSecret = '636896d5706e3da942e03b03758baf0b'
   config.apiCode = 'dinota'
 
   // add your middleware config here
