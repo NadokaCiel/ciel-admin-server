@@ -13,7 +13,7 @@ jobs:
         ports:
           - 6379/tcp
       mongodb:
-        image: mongodb
+        image: mongo
         ports: 
           - 27017
 
