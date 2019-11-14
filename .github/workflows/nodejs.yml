@@ -7,19 +7,11 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    services:
-      redis:
-        image: redis
-        ports:
-          - 6379
-      mongodb:
-        image: mongo
-        ports: 
-          - 27017
 
     strategy:
       matrix:
         node-version: [12.x]
+        mongodb-version: ["4.2"]
 
     steps:
     - uses: actions/checkout@master
@@ -32,6 +24,10 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
+    - name: Launch MongoDB
+      uses: wbari/start-mongoDB@v0.2
+      with:
+        mongoDBVersion: ${{ matrix.mongodb-version }}
     - name: npm install, build, and test
       run: |
         npm install
