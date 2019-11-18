@@ -1,7 +1,13 @@
 module.exports = () => {
   return async (ctx, next) => {
 
-    const token = ctx.cookies.get('token');
+    // const token = ctx.cookies.get('token');
+    let token;
+    if (ctx.request.method === 'GET') {
+      token = ctx.request.query.token;
+    } else {
+      token = ctx.request.body.token;
+    }
     if (!token) {
       ctx.body = {
         retcode: 40000,

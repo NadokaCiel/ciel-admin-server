@@ -40,17 +40,20 @@ class TokenController extends Controller {
         secure: false,
         // domain: this.ctx.get('Origin')
       });
-      this.ctx.cookies.set('auth', auth, {
-        maxAge: 7 * 24 * 60 * 60 * 1000,
-        httpOnly: false,
-        secure: false,
-        // domain: this.ctx.get('Origin')
-      });
+      // this.ctx.cookies.set('auth', auth, {
+      //   maxAge: 7 * 24 * 60 * 60 * 1000,
+      //   httpOnly: false,
+      //   secure: false,
+      //   // domain: this.ctx.get('Origin')
+      // });
       // this.ctx.set('Access-Control-Allow-Origin', this.ctx.get('Origin'));
       // this.ctx.set('Access-Control-Allow-Credentials', true);
       // this.ctx.set('Access-Control-Allow-Headers', 'Content-Type, Set-Cookie, *');
       // this.ctx.set('Access-Control-Allow-Methods', 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS');
-      return this.success('Login successfully.');
+      return this.success({
+        token: token,
+        msg: 'Login successfully.',
+      });
     } catch (err) {
       console.log(err);
       this.error('Login Failed.');
