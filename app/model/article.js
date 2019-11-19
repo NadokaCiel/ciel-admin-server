@@ -17,6 +17,12 @@ module.exports = app => {
       type: String,
       Required: 'Kindly enter the content of the article',
     },
+    abstruct: {
+      type: String,
+    },
+    status: {
+      type: String,
+    },
     creator: {
       type: Object,
     },
@@ -38,3 +44,9 @@ module.exports = app => {
 
   return mongoose.model('Article', ArticleSchema);
 };
+
+const statusMap = {
+  pending: '待审核',
+  audited: '审核通过',
+  failed: '审核失败',
+}

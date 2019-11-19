@@ -58,8 +58,13 @@ class ApiController extends Controller {
   }
 
   async getUser() {
-    const token = this.ctx.cookies.get('token');
-
+    // const token = this.ctx.cookies.get('token');
+    let token;
+    if (this.ctx.request.method === 'GET') {
+      token = this.ctx.request.query.token;
+    } else {
+      token = this.ctx.request.body.token;
+    }
     if (!token) {
       return null;
     }

@@ -61,7 +61,7 @@ class ArticleController extends Controller {
       let article = new this.ctx.model.Article(this.ctx.request.body);
       article.id = await this.getId('article_id');
       article.creator = await this.getUser();
-      console.log(article.creator);
+      article.status = 'pending';
       article = await article.save();
 
       this.success({
@@ -92,6 +92,8 @@ class ArticleController extends Controller {
       this.ctx.validate(updateRule);
 
       const data = this.ctx.request.body;
+
+      data.status = 'pending';
 
       const repeat = await this.ctx.model.Article.find({
         id: {

@@ -26,7 +26,8 @@ class PasswordController extends Controller {
         return this.error("New password can't be identical.");
       }
 
-      const token = this.ctx.cookies.get('token');
+      // const token = this.ctx.cookies.get('token');
+      const token = data.token;
 
       if (!token) {
         return this.unauthorized();
@@ -54,16 +55,16 @@ class PasswordController extends Controller {
       const auth = this.encryption(user.user_name);
       await this.app.redis.del(token);
       await this.app.redis.set(n_token, id, 'EX', 7 * 24 * 60 * 60 * 1000);
-      this.ctx.cookies.set('token', n_token, {
-        maxAge: 7 * 24 * 60 * 60 * 1000,
-        httpOnly: true,
-        secure: false,
-      });
-      this.ctx.cookies.set('auth', auth, {
-        maxAge: 7 * 24 * 60 * 60 * 1000,
-        httpOnly: false,
-        secure: false,
-      });
+      // this.ctx.cookies.set('token', n_token, {
+      //   maxAge: 7 * 24 * 60 * 60 * 1000,
+      //   httpOnly: true,
+      //   secure: false,
+      // });
+      // this.ctx.cookies.set('auth', auth, {
+      //   maxAge: 7 * 24 * 60 * 60 * 1000,
+      //   httpOnly: false,
+      //   secure: false,
+      // });
       user.password = this.encryption(data.n_password);
       const n_user = await this.ctx.model.User.findOneAndUpdate(id, user, {
         new: true,

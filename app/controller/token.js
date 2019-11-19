@@ -61,13 +61,15 @@ class TokenController extends Controller {
   }
 
   async destroy() {
-    const token = this.ctx.cookies.get('token');
+    const data = this.ctx.request.body;
+    // const token = this.ctx.cookies.get('token');
+    const token = data.token;
     if (!token) {
       return this.success(res, 'Logout successfully.');
     }
     try {
       await this.app.redis.del(token);
-      this.ctx.cookies.delete('token');
+      // this.ctx.cookies.delete('token');
       return this.success('Logout successfully.');
     } catch (err) {
       return this.error('Logout Failed.');
