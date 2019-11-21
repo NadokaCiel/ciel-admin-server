@@ -30,7 +30,7 @@
     "node": ">=10.0.0"
   },
   "scripts": {
-    "start": "egg-scripts start --daemon --title=egg-server-ciel-admin-server",
+    "start": "egg-scripts start --port 3000 --daemon --title=egg-server-ciel-admin-server",
     "stop": "egg-scripts stop --title=egg-server-ciel-admin-server",
     "dev": "egg-bin dev --port 3000",
     "debug": "egg-bin debug",
