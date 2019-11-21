@@ -26,13 +26,6 @@ const updateRule = {
   },
 };
 
-const roleRank = {
-  visitor: 1,
-  user: 2,
-  admin: 3,
-  superadmin: 4,
-}
-
 const Controller = require('../core/api_controller');
 class UserController extends Controller {
 
@@ -59,11 +52,11 @@ class UserController extends Controller {
 
       console.log('new_user', new_user);
       console.log('actor', actor);
-      if (roleRank[actor.role] < 3) {
+      if (this.roleRank(actor.role) < 3) {
         return this.error('没有创建用户的权限');
       }
 
-      if (roleRank[actor.role] === 3 && roleRank[new_user.role] >= 3) {
+      if (this.roleRank(actor.role) === 3 && this.roleRank(new_user.role) >= 3) {
         return this.error('无法创建拥有该权限的用户');
       }
 
@@ -115,15 +108,15 @@ class UserController extends Controller {
       const accepter = await this.getUser(true, data.id);
       const actor = await this.getUser(true);
 
-      if (roleRank[actor.role] < 2) {
+      if (this.roleRank(actor.role) < 2) {
         return this.error('没有操作权限');
       }
 
-      if (roleRank[actor.role] < roleRank[accepter.role]) {
+      if (this.roleRank(actor.role) < this.roleRank(accepter.role)) {
         return this.error('权限不足');
       }
 
-      if (roleRank[accepter.role] !== roleRank[data.role] && actor.role !== 'superadmin') {
+      if (this.roleRank(accepter.role) !== this.roleRank(data.role) && actor.role !== 'superadmin') {
         return this.error('无法更改该用户的角色');
       }
 
@@ -152,7 +145,7 @@ class UserController extends Controller {
     const user = await this.getUser(true, id);
     const actor = await this.getUser(true);
 
-    if (roleRank[actor.role] < 3) {
+    if (this.roleRank(actor.role) < 3) {
       return this.error('无权进行该操作');
     }
 

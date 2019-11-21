@@ -1,8 +1,15 @@
 const { Controller } = require('egg');
 const crypto = require('crypto');
 
+const roleRank = {
+  visitor: 1,
+  user: 2,
+  admin: 3,
+  superadmin: 4,
+}
+
 class ApiController extends Controller {
-  async repackList(modelName, select, getAll) {
+  async repackList(modelName, select, getAll, params = {}) {
 
     const {
       query,
@@ -25,7 +32,7 @@ class ApiController extends Controller {
     const doc = model[modelName];
 
     try {
-      const arr = await doc.find().select(filter).skip(offset)
+      const arr = await doc.find(params).select(filter).skip(offset)
         .limit(size);
       const count = await doc.count();
       this.success(this.makeList(arr, count));
@@ -137,6 +144,10 @@ class ApiController extends Controller {
       list: arr,
       total: count,
     };
+  }
+
+  roleRank(role) {
+    return roleRank[role] || 0;
   }
 
   encryption(password) {

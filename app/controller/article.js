@@ -44,7 +44,14 @@ const Controller = require('../core/api_controller');
 class ArticleController extends Controller {
 
   async index() {
-    await this.repackList('Article');
+    const actor = await this.getUser(true);
+    if (this.roleRank(actor.role) < 3) {
+      await this.repackList('Article', null, null, {
+        status: 'audited',
+      });
+    } else {
+      await this.repackList('Article');
+    }
   }
 
   async create() {
@@ -56,6 +63,11 @@ class ArticleController extends Controller {
       });
       if (repeat.length > 0) {
         return this.error('文章标题已被使用');
+      }
+
+      const actor = await this.getUser(true);
+      if (this.roleRank(actor.role) < 2) {
+        return this.error('没有操作权限');
       }
 
       let article = new this.ctx.model.Article(this.ctx.request.body);
@@ -93,6 +105,16 @@ class ArticleController extends Controller {
 
       const data = this.ctx.request.body;
 
+      const actor = await this.getUser(true);
+
+      if (actor.id !== data.creator.id && this.roleRank(actor.role) < 3) {
+        return this.error('没有操作权限');
+      }
+
+      if (data.status === 'audited' && this.roleRank(actor.role) < 3) {
+        return this.error('已审核通过的文章无法修改');
+      }
+
       data.status = 'pending';
 
       const repeat = await this.ctx.model.Article.find({
@@ -124,6 +146,13 @@ class ArticleController extends Controller {
     if (!this.ctx.params.id) {
       return this.error('缺少参数');
     }
+
+    const actor = await this.getUser(true);
+
+    if (this.roleRank(actor.role) < 3) {
+      return this.error('无权进行该操作');
+    }
+
     try {
       const article = await this.ctx.model.Article.remove({
         id: this.ctx.params.id,
