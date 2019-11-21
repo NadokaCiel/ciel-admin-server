@@ -4,7 +4,7 @@ module.exports = app => {
     id: Number,
     user_name: {
       type: String,
-      Required: 'Kindly enter the name of the user',
+      Required: '请输入用户名',
     },
     create_time: {
       type: Date,
@@ -15,7 +15,7 @@ module.exports = app => {
     },
     password: {
       type: String,
-      Required: 'Kindly enter the password of the user',
+      Required: '请输入密码',
     },
     role: {
       type: String,
@@ -33,3 +33,10 @@ module.exports = app => {
 
   return mongoose.model('User', UserSchema);
 };
+
+const roleMap = {
+  user: '普通用户',
+  admin: '管理员',
+  superadmin: '超级管理员',
+  visitor: '访客',
+}

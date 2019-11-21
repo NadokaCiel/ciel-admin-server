@@ -23,10 +23,10 @@ class TokenController extends Controller {
         user_name: name,
       });
       if (!user) {
-        return this.error("User doesn't exsit");
+        return this.error("用户不存在！");
       }
       if (user.password != this.encryption(this.ctx.request.body.password)) {
-        return this.error('Wrong password');
+        return this.error('密码错误！');
       }
 
       const now = Date.now() + '';
@@ -52,11 +52,11 @@ class TokenController extends Controller {
       // this.ctx.set('Access-Control-Allow-Methods', 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS');
       return this.success({
         token: token,
-        msg: 'Login successfully.',
+        msg: '登录成功',
       });
     } catch (err) {
       console.log(err);
-      this.error('Login Failed.');
+      this.error('登录失败！');
     }
   }
 
@@ -65,14 +65,15 @@ class TokenController extends Controller {
     // const token = this.ctx.cookies.get('token');
     const token = data.token;
     if (!token) {
-      return this.success(res, 'Logout successfully.');
+      return this.success(res, '登出成功');
     }
     try {
       await this.app.redis.del(token);
       // this.ctx.cookies.delete('token');
-      return this.success('Logout successfully.');
+      return this.success('登出成功');
     } catch (err) {
-      return this.error('Logout Failed.');
+      console.log(err);
+      return this.error('登出失败！');
     }
   }
 

@@ -55,7 +55,7 @@ class ArticleController extends Controller {
         title: this.ctx.request.body.title,
       });
       if (repeat.length > 0) {
-        return this.error('Article title already used');
+        return this.error('文章标题已被使用');
       }
 
       let article = new this.ctx.model.Article(this.ctx.request.body);
@@ -75,7 +75,7 @@ class ArticleController extends Controller {
 
   async show() {
     if (!this.ctx.params.id) {
-      return this.error('Parameter missing！');
+      return this.error('缺少参数');
     }
     try {
       const article = await this.ctx.model.Article.findOne({
@@ -83,7 +83,7 @@ class ArticleController extends Controller {
       });
       this.success(article);
     } catch (err) {
-      this.error('Get Article Failed');
+      this.error('获取文章失败！');
     }
   }
 
@@ -102,7 +102,7 @@ class ArticleController extends Controller {
         title: this.ctx.request.body.title,
       });
       if (repeat.length > 0) {
-        return this.error('Article title already used');
+        return this.error('文章标题已被使用');
       }
 
       data.updater = await this.getUser();
@@ -116,21 +116,21 @@ class ArticleController extends Controller {
       });
       this.success(article);
     } catch (err) {
-      return this.error('Update Article Failed');
+      return this.error('更新文章失败');
     }
   }
 
   async destroy() {
     if (!this.ctx.params.id) {
-      return this.error('Parameter missing！');
+      return this.error('缺少参数');
     }
     try {
       const article = await this.ctx.model.Article.remove({
         id: this.ctx.params.id,
       });
-      this.success('Article successfully deleted');
+      this.success('文章删除成功');
     } catch (err) {
-      this.error('Delete Article Failed');
+      this.error('文章删除失败！');
     }
   }
 

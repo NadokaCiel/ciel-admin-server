@@ -19,7 +19,7 @@ class ApiController extends Controller {
     }
 
     if (!model || !model[modelName]) {
-      return this.error('no such resource！');
+      return this.error('没有对应的数据模型。');
     }
 
     const doc = model[modelName];
@@ -57,18 +57,23 @@ class ApiController extends Controller {
     }
   }
 
-  async getUser() {
+  async getUser(showAll = false, userId) {
     // const token = this.ctx.cookies.get('token');
-    let token;
-    if (this.ctx.request.method === 'GET') {
-      token = this.ctx.request.query.token;
+    let id;
+    if (!userId) {
+      let token;
+      if (this.ctx.request.method === 'GET') {
+        token = this.ctx.request.query.token;
+      } else {
+        token = this.ctx.request.body.token;
+      }
+      if (!token) {
+        return null;
+      }
+      id = await this.app.redis.get(token);
     } else {
-      token = this.ctx.request.body.token;
+      id = userId;
     }
-    if (!token) {
-      return null;
-    }
-    const id = await this.app.redis.get(token);
 
     console.log('id', id);
     if (!id) {
@@ -85,16 +90,20 @@ class ApiController extends Controller {
       return null;
     }
 
-    return {
-      id: user.id,
-      user_name: user.user_name,
-    };
+    if (showAll) {
+      return user;
+    } else {
+      return {
+        id: user.id,
+        user_name: user.user_name,
+      };
+    }
   }
 
   success(data, retcode = 200) {
 
     if (!data) {
-      return this.error('The data you requested does not exist.');
+      return this.error('数据不存在。');
     }
 
     this.ctx.body = {
@@ -109,7 +118,7 @@ class ApiController extends Controller {
     this.ctx.body = {
       retcode,
       status: 'error',
-      msg: msg || 'Unknown error.',
+      msg: msg || '未知错误。',
     };
   }
 
@@ -118,7 +127,7 @@ class ApiController extends Controller {
     this.ctx.body = {
       retcode,
       status: 'unauthorized',
-      msg: msg || 'Please login before your further operation.',
+      msg: msg || '请先登录，再进行其他操作。',
     };
   }
 

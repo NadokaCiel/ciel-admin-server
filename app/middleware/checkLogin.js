@@ -12,7 +12,7 @@ module.exports = () => {
       ctx.body = {
         retcode: 40000,
         status: 'unauthorized',
-        msg: 'Please login before your further operation.',
+        msg: '请登录后再进行操作。',
       };
       return;
     }
@@ -21,7 +21,7 @@ module.exports = () => {
       ctx.body = {
         retcode: 40000,
         status: 'unauthorized',
-        msg: 'Please login before your further operation.',
+        msg: '请登录后再进行操作。',
       };
       return;
     }

@@ -39,12 +39,28 @@ class AppBootHook {
   //   this.app.cacheData = await this.app.model.query(QUERY_CACHE_SQL);
   // }
 
-  // async didReady() {
-  //   // 应用已经启动完毕
+  async serverDidReady() {
+    // 应用已经启动完毕
+    // 检查是否有超级管理员
+    try {
+      const ctx = await this.app.createAnonymousContext();
 
-  //   const ctx = await this.app.createAnonymousContext();
-  //   await ctx.service.Biz.request();
-  // }
+      const repeat = await ctx.model.User.find({
+        user_name: 'admin',
+      }).select('-password');
+      if (repeat.length <= 0) {
+        const new_user = new ctx.model.User({
+          user_name: 'admin',
+          role: 'superadmin',
+        });
+        new_user.id = 1;
+        new_user.password = "CmLTxyIIFka1tFDDZXZxxQ==";
+        await new_user.save();
+      }
+    } catch (err) {
+      console.log('didReady', err);
+    }
+  }
 
   // async serverDidReady() {
   //   // http / https server 已启动，开始接受外部请求

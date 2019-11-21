@@ -30,7 +30,7 @@ module.exports = (option, app) => {
 				ctx.body = {
 					retcode: 40003,
 					status: 'signature error',
-					msg: 'invalid signature.'
+					msg: '签名错误。'
 				};
 				return;
 			} else {

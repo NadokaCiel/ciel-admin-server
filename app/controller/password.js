@@ -23,7 +23,7 @@ class PasswordController extends Controller {
       const data = this.ctx.request.body;
 
       if (data.o_password == data.n_password) {
-        return this.error("New password can't be identical.");
+        return this.error("新密码不能与旧密码一致");
       }
 
       // const token = this.ctx.cookies.get('token');
@@ -44,10 +44,10 @@ class PasswordController extends Controller {
       });
 
       if (!user) {
-        return this.error("User doesn't exsit");
+        return this.error("用户不存在");
       }
       if (user.password != this.encryption(data.o_password)) {
-        return this.error('Wrong password');
+        return this.error('密码错误');
       }
 
       const now = Date.now() + '';
@@ -69,9 +69,9 @@ class PasswordController extends Controller {
       const n_user = await this.ctx.model.User.findOneAndUpdate(id, user, {
         new: true,
       }).select('-password');
-      await this.success('Change password successfully.');
+      await this.success('密码修改成功');
     } catch (err) {
-      return this.error('Reset Password Failed');
+      return this.error('密码修改失败');
     }
   }
 
