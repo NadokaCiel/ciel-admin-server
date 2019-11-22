@@ -1,3 +1,5 @@
+'use strict';
+
 const updateRule = {
   o_password: {
     type: 'password',
@@ -22,8 +24,8 @@ class PasswordController extends Controller {
 
       const data = this.ctx.request.body;
 
-      if (data.o_password == data.n_password) {
-        return this.error("新密码不能与旧密码一致");
+      if (data.o_password === data.n_password) {
+        return this.error('新密码不能与旧密码一致');
       }
 
       // const token = this.ctx.cookies.get('token');
@@ -44,15 +46,15 @@ class PasswordController extends Controller {
       });
 
       if (!user) {
-        return this.error("用户不存在");
+        return this.error('用户不存在');
       }
-      if (user.password != this.encryption(data.o_password)) {
+      if (user.password !== this.encryption(data.o_password)) {
         return this.error('密码错误');
       }
 
       const now = Date.now() + '';
       const n_token = this.encryption(user.user_name + now);
-      const auth = this.encryption(user.user_name);
+      // const auth = this.encryption(user.user_name);
       await this.app.redis.del(token);
       await this.app.redis.set(n_token, id, 'EX', 7 * 24 * 60 * 60 * 1000);
       // this.ctx.cookies.set('token', n_token, {
@@ -66,7 +68,7 @@ class PasswordController extends Controller {
       //   secure: false,
       // });
       user.password = this.encryption(data.n_password);
-      const n_user = await this.ctx.model.User.findOneAndUpdate(id, user, {
+      await this.ctx.model.User.findOneAndUpdate(id, user, {
         new: true,
       }).select('-password');
       await this.success('密码修改成功');

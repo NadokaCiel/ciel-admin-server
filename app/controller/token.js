@@ -1,3 +1,5 @@
+'use strict';
+
 const createRule = {
   user_name: {
     type: 'string',
@@ -23,15 +25,15 @@ class TokenController extends Controller {
         user_name: name,
       });
       if (!user) {
-        return this.error("用户不存在！");
+        return this.error('用户不存在！');
       }
-      if (user.password != this.encryption(this.ctx.request.body.password)) {
+      if (user.password !== this.encryption(this.ctx.request.body.password)) {
         return this.error('密码错误！');
       }
 
       const now = Date.now() + '';
       const token = this.encryption(name + now);
-      const auth = this.encryption(name);
+      // const auth = this.encryption(name);
 
       await this.app.redis.set(token, user.id, 'EX', 7 * 24 * 60 * 60 * 1000);
       this.ctx.cookies.set('token', token, {
@@ -51,7 +53,7 @@ class TokenController extends Controller {
       // this.ctx.set('Access-Control-Allow-Headers', 'Content-Type, Set-Cookie, *');
       // this.ctx.set('Access-Control-Allow-Methods', 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS');
       return this.success({
-        token: token,
+        token,
         msg: '登录成功',
       });
     } catch (err) {
@@ -65,7 +67,7 @@ class TokenController extends Controller {
     // const token = this.ctx.cookies.get('token');
     const token = data.token;
     if (!token) {
-      return this.success(res, '登出成功');
+      return this.success('登出成功');
     }
     try {
       await this.app.redis.del(token);

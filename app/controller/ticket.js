@@ -1,3 +1,5 @@
+'use strict';
+
 const createRule = {
   app_key: {
     type: 'string',

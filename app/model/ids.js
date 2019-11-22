@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = app => {
   const mongoose = app.mongoose;
   const IdsSchema = new mongoose.Schema({

@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = app => {
   const mongoose = app.mongoose;
   const ArticleSchema = new mongoose.Schema({
@@ -45,8 +47,8 @@ module.exports = app => {
   return mongoose.model('Article', ArticleSchema);
 };
 
-const statusMap = {
-  pending: '待审核',
-  audited: '审核通过',
-  failed: '审核失败',
-}
+// const statusMap = {
+//   pending: '待审核',
+//   audited: '审核通过',
+//   failed: '审核失败',
+// };

@@ -1,3 +1,5 @@
+'use strict';
+
 require('babel-register');
 
 class AppBootHook {
@@ -54,7 +56,7 @@ class AppBootHook {
           role: 'superadmin',
         });
         new_user.id = 1;
-        new_user.password = "CmLTxyIIFka1tFDDZXZxxQ==";
+        new_user.password = 'CmLTxyIIFka1tFDDZXZxxQ==';
         await new_user.save();
       }
     } catch (err) {

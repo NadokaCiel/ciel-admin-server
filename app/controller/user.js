@@ -1,3 +1,5 @@
+'use strict';
+
 const createRule = {
   user_name: {
     type: 'string',
@@ -158,7 +160,7 @@ class UserController extends Controller {
     }
 
     try {
-      const user = await this.ctx.model.User.remove({
+      await this.ctx.model.User.remove({
         id,
       });
       this.success('删除用户成功');

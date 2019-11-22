@@ -1,3 +1,5 @@
+'use strict';
+
 const { Controller } = require('egg');
 const crypto = require('crypto');
 
@@ -6,7 +8,7 @@ const roleRank = {
   user: 2,
   admin: 3,
   superadmin: 4,
-}
+};
 
 class ApiController extends Controller {
   async repackList(modelName, select, getAll, params = {}) {
@@ -99,12 +101,12 @@ class ApiController extends Controller {
 
     if (showAll) {
       return user;
-    } else {
-      return {
-        id: user.id,
-        user_name: user.user_name,
-      };
     }
+    return {
+      id: user.id,
+      user_name: user.user_name,
+    };
+
   }
 
   success(data, retcode = 200) {

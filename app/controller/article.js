@@ -1,3 +1,5 @@
+'use strict';
+
 const createRule = {
   title: {
     type: 'string',
@@ -154,7 +156,7 @@ class ArticleController extends Controller {
     }
 
     try {
-      const article = await this.ctx.model.Article.remove({
+      await this.ctx.model.Article.remove({
         id: this.ctx.params.id,
       });
       this.success('文章删除成功');

@@ -1,3 +1,7 @@
+'use strict';
+
+
+// eslint-disable-next-line
 import { defaultSign } from 'mksign';
 
 module.exports = (option, app) => {

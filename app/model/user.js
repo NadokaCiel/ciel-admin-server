@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = app => {
   const mongoose = app.mongoose;
   const UserSchema = new mongoose.Schema({
@@ -34,9 +36,9 @@ module.exports = app => {
   return mongoose.model('User', UserSchema);
 };
 
-const roleMap = {
-  user: '普通用户',
-  admin: '管理员',
-  superadmin: '超级管理员',
-  visitor: '访客',
-}
+// const roleMap = {
+//   user: '普通用户',
+//   admin: '管理员',
+//   superadmin: '超级管理员',
+//   visitor: '访客',
+// };

@@ -11,27 +11,17 @@ jobs:
     strategy:
       matrix:
         node-version: [12.x]
-        mongodb-version: ["4.2"]
 
     steps:
     - uses: actions/checkout@master
-    - uses: shogo82148/actions-setup-redis@v1
-      with:
-        redis-version: '5.x'
-    - run: redis-cli ping
     - uses: actions/checkout@v1
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - name: Launch MongoDB
-      uses: wbari/start-mongoDB@v0.2
-      with:
-        mongoDBVersion: ${{ matrix.mongodb-version }}
     - name: npm install, build, and test
       run: |
         npm install
-        npm run dev
       env:
         CI: true
         ACCESS_TOKEN: ${{ secrets.CIELTOKEN }}
