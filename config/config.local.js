@@ -45,10 +45,10 @@ module.exports = appInfo => {
     domainWhiteList: [ '*' ],
   };
 
-  // config.cors = {
-  //   origin: [ 'http://localhost:8080' ],
-  //   credentials: true,
-  // };
+  config.cors = {
+    origin: [ 'http://localhost:8080' ],
+    credentials: true,
+  };
 
   // add your user config here
   const userConfig = {
