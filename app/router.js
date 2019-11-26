@@ -9,6 +9,9 @@ module.exports = app => {
   const checkLogin = middlewares.checkLogin();
   const checkTicket = middlewares.checkTicket();
 
+  // 基础数据
+  router.get('common', '/api/common', checkLogin, 'common.index');
+
   // 管理系统相关
   router.resources('user', '/api/user', checkLogin, 'user');
   router.post('user', '/api/user', checkLogin, 'user.createAccount');

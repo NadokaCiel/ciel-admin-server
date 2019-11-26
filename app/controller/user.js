@@ -81,11 +81,16 @@ class UserController extends Controller {
       return this.error('缺少参数！');
     }
     try {
-      const user = await this.ctx.model.User.findOne({
-        id: this.ctx.params.id,
-      }).select('-password');
-      this.success(user);
-      // this.ctx.status = 200
+      if (this.ctx.params.id != 'self') {
+        const user = await this.ctx.model.User.findOne({
+          id: this.ctx.params.id,
+        }).select('-password');
+        this.success(user);
+        // this.ctx.status = 200
+      } else {
+        const user = await this.getUser(true);
+        this.success(user);
+      }
     } catch (err) {
       this.error('获取用户失败！');
     }
