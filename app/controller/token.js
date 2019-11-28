@@ -57,7 +57,7 @@ class TokenController extends Controller {
         msg: '登录成功',
       });
     } catch (err) {
-      console.log(err);
+      this.logger.error(err);
       this.error('登录失败！');
     }
   }
@@ -74,7 +74,7 @@ class TokenController extends Controller {
       // this.ctx.cookies.delete('token');
       return this.success('登出成功');
     } catch (err) {
-      console.log(err);
+      this.logger.error(err);
       return this.error('登出失败！');
     }
   }

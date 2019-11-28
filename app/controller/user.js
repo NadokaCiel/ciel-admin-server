@@ -70,7 +70,7 @@ class UserController extends Controller {
       });
       // this.ctx.status = 201
     } catch (err) {
-      console.log(err);
+      this.logger.error(err);
       this.error(err);
       // this.error("Create User Failed")
     }
@@ -92,6 +92,7 @@ class UserController extends Controller {
         this.success(user);
       }
     } catch (err) {
+      this.logger.error(err);
       this.error('获取用户失败！');
     }
   }
@@ -139,7 +140,8 @@ class UserController extends Controller {
       });
       // this.ctx.status = 200
     } catch (err) {
-      return this.error('用户更新失败');
+      this.logger.error(err);
+      this.error('用户更新失败');
     }
   }
 
@@ -171,6 +173,7 @@ class UserController extends Controller {
       this.success('删除用户成功');
       // this.ctx.status = 204
     } catch (err) {
+      this.logger.error(err);
       this.error('删除用户失败');
     }
   }

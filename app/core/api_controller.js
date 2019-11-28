@@ -13,32 +13,33 @@ const roleRank = {
 class ApiController extends Controller {
   async repackList(modelName, select, getAll, params = {}) {
 
-    const {
-      query,
-      model,
-    } = this.ctx;
-
-    const size = Number(query.size) || 10;
-    const page = query.page || 1;
-    const offset = Number((page - 1) * size);
-    let filter = select || '';
-
-    if (!getAll) {
-      filter += ' -_id -__v';
-    }
-
-    if (!model || !model[modelName]) {
-      return this.error('没有对应的数据模型。');
-    }
-
-    const doc = model[modelName];
-
     try {
+      const {
+        query,
+        model,
+      } = this.ctx;
+
+      const size = Number(query.size) || 10;
+      const page = query.page || 1;
+      const offset = Number((page - 1) * size);
+      let filter = select || '';
+
+      if (!getAll) {
+        filter += ' -_id -__v';
+      }
+
+      if (!model || !model[modelName]) {
+        return this.error('没有对应的数据模型。');
+      }
+
+      const doc = model[modelName];
+
       const arr = await doc.find(params).select(filter).skip(offset)
         .limit(size);
       const count = await doc.count();
       this.success(this.makeList(arr, count));
     } catch (err) {
+      this.logger.error(err);
       this.error(err);
     }
   }
@@ -62,6 +63,7 @@ class ApiController extends Controller {
       return ids.nowId;
 
     } catch (err) {
+      this.logger.error(err);
       throw new Error(err);
     }
   }

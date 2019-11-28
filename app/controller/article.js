@@ -82,7 +82,7 @@ class ArticleController extends Controller {
         id: article.id,
       });
     } catch (err) {
-      console.log(err);
+      this.logger.error(err);
       this.error('Create Article Failed');
     }
   }
@@ -97,6 +97,7 @@ class ArticleController extends Controller {
       });
       this.success(article);
     } catch (err) {
+      this.logger.error(err);
       this.error('获取文章失败！');
     }
   }
@@ -140,6 +141,7 @@ class ArticleController extends Controller {
       });
       this.success(article);
     } catch (err) {
+      this.logger.error(err);
       return this.error('更新文章失败');
     }
   }
@@ -161,6 +163,7 @@ class ArticleController extends Controller {
       });
       this.success('文章删除成功');
     } catch (err) {
+      this.logger.error(err);
       this.error('文章删除失败！');
     }
   }

@@ -48,6 +48,11 @@ class PasswordController extends Controller {
       if (!user) {
         return this.error('用户不存在');
       }
+
+      if (user.role === 'visitor') {
+        return this.error('不能更改游客的密码');
+      }
+
       if (user.password !== this.encryption(data.o_password)) {
         return this.error('密码错误');
       }
@@ -73,6 +78,7 @@ class PasswordController extends Controller {
       }).select('-password');
       await this.success('密码修改成功');
     } catch (err) {
+      this.logger.error(err);
       return this.error('密码修改失败');
     }
   }

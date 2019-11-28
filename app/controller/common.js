@@ -17,6 +17,7 @@ class CommonController extends Controller {
         articleCount,
       });
     } catch (err) {
+      this.logger.error(err);
       this.error(err);
     }
   }

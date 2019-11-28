@@ -38,7 +38,7 @@ class TicketController extends Controller {
         ticket,
       });
     } catch (err) {
-      console.log(err);
+      this.logger.error(err);
       this.error('登录失败', 41000);
     }
   }
