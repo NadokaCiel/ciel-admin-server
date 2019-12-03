@@ -12,6 +12,9 @@ module.exports = app => {
   // 基础数据
   router.get('common', '/api/common', checkLogin, 'common.index');
 
+  // 微博数据服务
+  router.get('weibo', '/api/weibo', checkLogin, 'weibo.index');
+
   // 管理系统相关
   router.resources('user', '/api/user', checkLogin, 'user');
   router.post('user', '/api/user', checkLogin, 'user.createAccount');
