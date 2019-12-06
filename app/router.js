@@ -23,6 +23,11 @@ module.exports = app => {
 
   router.resources('article', '/api/article', checkLogin, 'article');
 
+  // 宠物系统相关
+  router.resources('petType', '/api/petType', checkLogin, 'petType');
+  router.post('petType', '/api/freezePetType/:id', checkLogin, 'petType.freeze');
+  router.post('petType', '/api/unfreezePetType/:id', checkLogin, 'petType.unfreeze');
+
   // 小程序相关
   router.post('mini-ticket', '/mini/ticket', 'ticket.createTicket');
   router.resources('mini-article-list', '/mini/article', checkTicket, 'article');

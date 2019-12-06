@@ -24,7 +24,7 @@ class ArticleController extends Controller {
 
       const data = result.data;
 
-      console.log('data', data);
+      // console.log('data', data);
 
       this.success(this.makeList(data.statuses || [], data.total_number || 0));
     } catch (err) {
@@ -32,6 +32,36 @@ class ArticleController extends Controller {
       this.error(err);
     }
   }
+
+  // async index() {
+  //   try {
+  //     const {
+  //       query,
+  //     } = this.ctx;
+
+  //     const size = Number(query.size) || 50;
+  //     const page = query.page || 1;
+
+  //     const result = await this.ctx.curl(`https://api.weibo.com/2/statuses/user_timeline.json`, {
+  //       method: 'GET',
+  //       dataType: 'json',
+  //       data: {
+  //         access_token: '2.00tOruICyVTjzCd193f50664vHUueB',
+  //         count: size,
+  //         page,
+  //       },
+  //     });
+
+  //     const data = result.data;
+
+  //     console.log('data', data);
+
+  //     this.success(this.makeList(data.statuses || [], data.total_number || 0));
+  //   } catch (err) {
+  //     this.logger.error(err);
+  //     this.error(err);
+  //   }
+  // }
 
 }
 module.exports = ArticleController;

@@ -110,7 +110,11 @@ class ArticleController extends Controller {
 
       const actor = await this.getUser(true);
 
-      if (actor.id !== data.creator.id && this.roleRank(actor.role) < 3) {
+      const old = await this.ctx.model.Article.findOne({
+        id: data.id,
+      });
+
+      if (actor.id !== old.creator.id && this.roleRank(actor.role) < 3) {
         return this.error('没有操作权限');
       }
 
