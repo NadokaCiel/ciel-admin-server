@@ -12,6 +12,12 @@ class ArticleController extends Controller {
       const size = Number(query.size) || 10;
       const page = query.page || 1;
 
+      const actor = await this.getUser(true);
+
+      if (this.roleRank(actor.role) < 4 && actor.id != 6) {
+        return this.error('权限不足：无法查看该微博内容');
+      }
+
       const result = await this.ctx.curl(`https://api.weibo.com/2/statuses/home_timeline.json`, {
         method: 'GET',
         dataType: 'json',
