@@ -18,8 +18,8 @@ module.exports = () => {
       };
       return;
     }
-    const redis_token = await ctx.app.redis.get(token);
-    if (!redis_token) {
+    const id = await ctx.app.redis.get(token);
+    if (!id) {
       ctx.body = {
         retcode: 40000,
         status: 'unauthorized',
@@ -27,6 +27,14 @@ module.exports = () => {
       };
       return;
     }
+
+    await ctx.model.User.findOneAndUpdate({
+      id,
+    }, {
+      visit_time: Date.now(),
+    }, {
+      new: true,
+    });
     await next();
 
   };

@@ -15,6 +15,9 @@ module.exports = app => {
     update_time: {
       type: Date,
     },
+    visit_time: {
+      type: Date,
+    },
     password: {
       type: String,
       Required: '请输入密码',
