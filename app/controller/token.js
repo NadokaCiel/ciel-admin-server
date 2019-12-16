@@ -54,6 +54,11 @@ class TokenController extends Controller {
       // this.ctx.set('Access-Control-Allow-Methods', 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS');
       return this.success({
         token,
+        user: {
+          id: user.id,
+          role: user.role,
+          name: user.user_name,
+        },
         msg: '登录成功',
       });
     } catch (err) {
