@@ -23,6 +23,9 @@ module.exports = app => {
 
   router.resources('article', '/api/article', checkLogin, 'article');
 
+  router.resources('image', '/api/image', checkLogin, 'image');
+  router.post('image', '/api/upload', 'image.upload');
+
   // 宠物系统相关
   router.resources('petType', '/api/petType', checkLogin, 'petType');
   router.post('petType', '/api/freezePetType/:id', checkLogin, 'petType.freeze');
