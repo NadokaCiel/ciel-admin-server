@@ -33,7 +33,8 @@ module.exports = app => {
 
   // 小程序相关
   router.post('mini-ticket', '/mini/ticket', 'ticket.createTicket');
-  router.resources('mini-article-list', '/mini/article', checkTicket, 'article');
+  router.post('mini-article', '/mini/article/list', checkTicket, 'miniapp.article.index');
+  router.post('mini-article', '/mini/article/view/:id', checkTicket, 'miniapp.article.show');
 
   app.use(serve({ rootDir: 'app/public', rootPath: '/public' }));
 };
