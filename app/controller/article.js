@@ -42,6 +42,12 @@ const updateRule = {
   },
 };
 
+const statusMap = {
+  pending: '待审核',
+  audited: '审核通过',
+  failed: '审核失败',
+};
+
 const Controller = require('../core/api_controller');
 class ArticleController extends Controller {
 
@@ -169,6 +175,45 @@ class ArticleController extends Controller {
     } catch (err) {
       this.logger.error(err);
       this.error('文章删除失败！');
+    }
+  }
+
+  async status() {
+    try {
+
+      const data = this.ctx.request.body;
+
+      if (!statusMap[data.status]) {
+        return this.error('错误的状态操作');
+      }
+
+      const actor = await this.getUser(true);
+
+      const old = await this.ctx.model.Article.findOne({
+        id: data.id,
+      });
+
+      if (actor.id !== old.creator.id && this.roleRank(actor.role) < 3) {
+        return this.error('没有操作权限');
+      }
+
+      old.status = data.status;
+
+      old.updater = await this.getUser();
+
+      old.update_time = Date.now();
+
+      const article = await this.ctx.model.Article.findOneAndUpdate({
+        id: old.id,
+      }, old, {
+        new: true,
+      });
+      this.success({
+        id: old.id,
+      });
+    } catch (err) {
+      this.logger.error(err);
+      return this.error('操作文章失败');
     }
   }
 

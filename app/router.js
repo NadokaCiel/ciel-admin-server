@@ -22,6 +22,7 @@ module.exports = app => {
   router.resources('token', '/api/token', 'token');
 
   router.resources('article', '/api/article', checkLogin, 'article');
+  router.put('article', '/api/article/:id/status', checkLogin, 'article.status');
 
   router.resources('image', '/api/image', checkLogin, 'image');
   router.post('image', '/api/upload', 'image.upload');

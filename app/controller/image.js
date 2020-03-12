@@ -74,7 +74,7 @@ class ImageController extends Controller {
       await awaitWriteStream(stream.pipe(writeStream));
 
       let image = new this.ctx.model.Image({
-        url: '/public/images/' + filename,
+        url: '/public/uploads/' + filename,
         name: filename,
       });
       image.id = await this.getId('image_id');
