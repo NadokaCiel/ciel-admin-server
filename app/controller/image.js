@@ -154,6 +154,22 @@ class ImageController extends Controller {
     }
 
     try {
+      const image = await this.ctx.model.Image.findOne({
+        id: this.ctx.params.id,
+      });
+      if (!image) {
+        this.error('图片不存在');
+        return;
+      }
+      const imagePath = path.join(originPath, image.name);
+      if (!fs.existsSync(imagePath)) {
+        await this.ctx.model.Image.remove({
+          id: this.ctx.params.id,
+        });
+        this.success('文件不存在，清除图片记录');
+        return;
+      }
+      fs.unlinkSync(imagePath);
       await this.ctx.model.Image.remove({
         id: this.ctx.params.id,
       });

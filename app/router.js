@@ -32,6 +32,12 @@ module.exports = app => {
   router.post('petType', '/api/freezePetType/:id', checkLogin, 'petType.freeze');
   router.post('petType', '/api/unfreezePetType/:id', checkLogin, 'petType.unfreeze');
 
+  // 物品系统相关
+  router.resources('item', '/api/item', checkLogin, 'item.item');
+  router.get('item', '/api/itemOption', 'item.item.option');
+  router.resources('item-type', '/api/itemType', checkLogin, 'item.type');
+  router.resources('item-quality', '/api/quality', checkLogin, 'item.quality');
+
   // 小程序相关
   router.post('mini-ticket', '/mini/ticket', 'ticket.createTicket');
   router.post('mini-article', '/mini/article/list', checkTicket, 'miniapp.article.index');
