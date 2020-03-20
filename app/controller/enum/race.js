@@ -5,21 +5,61 @@ const createRule = {
     type: 'string',
     required: true,
   },
-  type_id: {
-    type: 'number',
-    required: true,
-  },
-  quality_id: {
-    type: 'number',
-    required: true,
-  },
-  stack: {
-    type: 'number',
-    required: true,
-  },
   mark: {
     type: 'string',
     required: false,
+  },
+  race: {
+    type: 'string',
+    required: true,
+  },
+  str_base: {
+    type: 'number',
+    required: true,
+  },
+  int_base: {
+    type: 'number',
+    required: true,
+  },
+  agi_base: {
+    type: 'number',
+    required: true,
+  },
+  fit_base: {
+    type: 'number',
+    required: true,
+  },
+  mtl_base: {
+    type: 'number',
+    required: true,
+  },
+  atk_rate: {
+    type: 'number',
+    required: true,
+  },
+  mag_rate: {
+    type: 'number',
+    required: true,
+  },
+  spd_rate: {
+    type: 'number',
+    required: true,
+  },
+  def_rate: {
+    type: 'number',
+    required: true,
+  },
+  mdf_rate: {
+    type: 'number',
+    required: true,
+  },
+  hp_rate: {
+    type: 'number',
+    required: true,
+  },
+  mp_rate: {
+    type: 'number',
+    required: true,
   },
   image: {
     type: 'string',
@@ -32,25 +72,65 @@ const updateRule = {
     type: 'number',
     required: true,
   },
-  name: {
+  race: {
     type: 'string',
     required: true,
   },
-  type_id: {
-    type: 'number',
-    required: true,
-  },
-  quality_id: {
-    type: 'number',
-    required: true,
-  },
-  stack: {
-    type: 'number',
+  name: {
+    type: 'string',
     required: true,
   },
   mark: {
     type: 'string',
     required: false,
+  },
+  str_base: {
+    type: 'number',
+    required: true,
+  },
+  int_base: {
+    type: 'number',
+    required: true,
+  },
+  agi_base: {
+    type: 'number',
+    required: true,
+  },
+  fit_base: {
+    type: 'number',
+    required: true,
+  },
+  mtl_base: {
+    type: 'number',
+    required: true,
+  },
+  atk_rate: {
+    type: 'number',
+    required: true,
+  },
+  mag_rate: {
+    type: 'number',
+    required: true,
+  },
+  spd_rate: {
+    type: 'number',
+    required: true,
+  },
+  def_rate: {
+    type: 'number',
+    required: true,
+  },
+  mdf_rate: {
+    type: 'number',
+    required: true,
+  },
+  hp_rate: {
+    type: 'number',
+    required: true,
+  },
+  mp_rate: {
+    type: 'number',
+    required: true,
   },
   image: {
     type: 'string',
@@ -59,14 +139,14 @@ const updateRule = {
 };
 
 const Controller = require('../../core/api_controller');
-class ItemController extends Controller {
+class RaceController extends Controller {
 
   async index() {
     const actor = await this.getUser(true);
     if (this.roleRank(actor.role) < 3) {
       return this.error('仅限管理员使用该功能');
     } else {
-      await this.repackList('Item');
+      await this.repackList('Race');
     }
   }
 
@@ -79,24 +159,24 @@ class ItemController extends Controller {
         return this.error('没有操作权限');
       }
 
-      const repeat = await this.ctx.model.Item.find({
+      const repeat = await this.ctx.model.Race.find({
         name: this.ctx.request.body.name,
       });
       if (repeat.length > 0) {
-        return this.error('物品名称已被使用');
+        return this.error('种族名称已被使用');
       }
 
-      let item = new this.ctx.model.Item(this.ctx.request.body);
-      item.id = await this.getId('item_id');
-      item.creator = await this.getUser();
-      item = await item.save();
+      let race = new this.ctx.model.Race(this.ctx.request.body);
+      race.id = await this.getId('race_id');
+      race.creator = await this.getUser();
+      race = await race.save();
 
       this.success({
-        id: item.id,
+        id: race.id,
       });
     } catch (err) {
       this.logger.error(err);
-      this.error('Create Item Failed');
+      this.error('Create Race Failed');
     }
   }
 
@@ -109,13 +189,13 @@ class ItemController extends Controller {
       return this.error('没有操作权限');
     }
     try {
-      const item = await this.ctx.model.Item.findOne({
+      const race = await this.ctx.model.Race.findOne({
         id: this.ctx.params.id,
       });
-      this.success(item);
+      this.success(race);
     } catch (err) {
       this.logger.error(err);
-      this.error('获取物品失败！');
+      this.error('获取种族失败！');
     }
   }
 
@@ -127,7 +207,7 @@ class ItemController extends Controller {
 
       const actor = await this.getUser(true);
 
-      const old = await this.ctx.model.Item.findOne({
+      const old = await this.ctx.model.Race.findOne({
         id: data.id,
       });
 
@@ -135,28 +215,28 @@ class ItemController extends Controller {
         return this.error('没有操作权限');
       }
 
-      const repeat = await this.ctx.model.Item.find({
+      const repeat = await this.ctx.model.Race.find({
         id: {
           $ne: data.id,
         },
         name: this.ctx.request.body.name,
       });
       if (repeat.length > 0) {
-        return this.error('物品标题已被使用');
+        return this.error('种族标题已被使用');
       }
 
       data.updater = await this.getUser();
       data.update_time = Date.now();
 
-      const item = await this.ctx.model.Item.findOneAndUpdate({
+      const race = await this.ctx.model.Race.findOneAndUpdate({
         id: data.id,
       }, data, {
         new: true,
       });
-      this.success(item);
+      this.success(race);
     } catch (err) {
       this.logger.error(err);
-      return this.error('更新物品失败');
+      return this.error('更新种族失败');
     }
   }
 
@@ -172,13 +252,13 @@ class ItemController extends Controller {
     }
 
     try {
-      await this.ctx.model.Item.remove({
+      await this.ctx.model.Race.remove({
         id: this.ctx.params.id,
       });
-      this.success('物品删除成功');
+      this.success('种族删除成功');
     } catch (err) {
       this.logger.error(err);
-      this.error('物品删除失败！');
+      this.error('种族删除失败！');
     }
   }
 
@@ -191,15 +271,11 @@ class ItemController extends Controller {
 
       const filter = '-_id -__v -create_time -update_time -creator -updater';
 
-      const typeDoc = model.ItemType;
-      const typeArr = await typeDoc.find().select(filter);
-
-      const qualityDoc = model.Quality;
-      const qualityArr = await qualityDoc.find().select(filter);
+      const raceDoc = model.Race;
+      const raceArr = await raceDoc.find().select(filter);
 
       this.success({
-        type: typeArr,
-        quality: qualityArr,
+        list: raceArr,
       });
     } catch (err) {
       this.logger.error(err);
@@ -207,4 +283,4 @@ class ItemController extends Controller {
     }
   }
 }
-module.exports = ItemController;
+module.exports = RaceController;

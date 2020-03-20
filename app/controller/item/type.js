@@ -151,7 +151,7 @@ class ItemTypeController extends Controller {
 
     const actor = await this.getUser(true);
 
-    if (this.roleRank(actor.role) < 3) {
+    if (this.roleRank(actor.role) < 4) {
       return this.error('无权进行该操作');
     }
 
