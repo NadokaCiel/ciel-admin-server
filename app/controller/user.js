@@ -120,6 +120,10 @@ class UserController extends Controller {
         return this.error('没有操作权限');
       }
 
+      if (accepter.role !== data.role && data.id === actor.id) {
+        return this.error('无法变更自己的操作权限');
+      }
+
       if (this.roleRank(actor.role) < this.roleRank(accepter.role)) {
         return this.error('权限不足');
       }
