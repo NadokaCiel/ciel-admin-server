@@ -15,7 +15,7 @@ const createRule = {
   },
   abstruct: {
     type: 'string',
-    required: true,
+    required: false,
   },
   tag: {
     type: 'array',
@@ -46,7 +46,7 @@ const updateRule = {
   },
   abstruct: {
     type: 'string',
-    required: true,
+    required: false,
   },
   tag: {
     type: 'array',
