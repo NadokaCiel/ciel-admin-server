@@ -12,6 +12,9 @@ module.exports = app => {
       type: String,
       Required: 'Kindly enter the author of the article',
     },
+    cover: {
+      type: String,
+    },
     tag: {
       type: Array,
     },

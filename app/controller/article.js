@@ -13,8 +13,16 @@ const createRule = {
     type: 'string',
     required: true,
   },
+  abstruct: {
+    type: 'string',
+    required: true,
+  },
   tag: {
     type: 'array',
+    required: false,
+  },
+  cover: {
+    type: 'string',
     required: false,
   },
 };
@@ -36,8 +44,16 @@ const updateRule = {
     type: 'string',
     required: true,
   },
+  abstruct: {
+    type: 'string',
+    required: true,
+  },
   tag: {
     type: 'array',
+    required: false,
+  },
+  cover: {
+    type: 'string',
     required: false,
   },
 };
