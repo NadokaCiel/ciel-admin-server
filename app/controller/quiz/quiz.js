@@ -7,23 +7,15 @@ const createRule = {
   },
   author: {
     type: 'string',
-    required: false,
-  },
-  content: {
-    type: 'string',
     required: true,
-  },
-  abstruct: {
-    type: 'string',
-    required: false,
-  },
-  tag: {
-    type: 'array',
-    required: false,
   },
   cover: {
     type: 'string',
-    required: false,
+    required: true,
+  },
+  subjects: {
+    type: 'array',
+    required: true,
   },
 };
 
@@ -38,23 +30,15 @@ const updateRule = {
   },
   author: {
     type: 'string',
-    required: false,
-  },
-  content: {
-    type: 'string',
     required: true,
-  },
-  abstruct: {
-    type: 'string',
-    required: false,
-  },
-  tag: {
-    type: 'array',
-    required: false,
   },
   cover: {
     type: 'string',
-    required: false,
+    required: true,
+  },
+  subjects: {
+    type: 'array',
+    required: true,
   },
 };
 
@@ -64,17 +48,15 @@ const statusMap = {
   failed: '审核失败',
 };
 
-const Controller = require('../core/api_controller');
-class ArticleController extends Controller {
+const Controller = require('../../core/api_controller');
+class QuizController extends Controller {
 
   async index() {
     const actor = await this.getUser(true);
     if (this.roleRank(actor.role) < 3) {
-      await this.repackList('Article', null, null, {
-        status: 'audited',
-      });
+      return this.error('仅限管理员使用该功能');
     } else {
-      await this.repackList('Article');
+      await this.repackList('Quiz');
     }
   }
 
@@ -82,30 +64,39 @@ class ArticleController extends Controller {
     try {
       this.ctx.validate(createRule);
 
-      const repeat = await this.ctx.model.Article.find({
-        title: this.ctx.request.body.title,
-      });
-      if (repeat.length > 0) {
-        return this.error('文章标题已被使用');
-      }
-
       const actor = await this.getUser(true);
-      if (this.roleRank(actor.role) < 2) {
+      if (this.roleRank(actor.role) < 3) {
         return this.error('没有操作权限');
       }
 
-      let article = new this.ctx.model.Article(this.ctx.request.body);
-      article.id = await this.getId('article_id');
-      article.creator = await this.getUser();
-      article.status = 'pending';
-      article = await article.save();
+      const repeat = await this.ctx.model.Quiz.find({
+        title: this.ctx.request.body.title,
+      });
+      if (repeat.length > 0) {
+        return this.error('该问卷标题已被使用');
+      }
+
+      let quiz = new this.ctx.model.Quiz(this.ctx.request.body);
+      let score = 0;
+      quiz.subjects.forEach((subject, index) => {
+        const line = subject;
+        line.idx = index + 1;
+        score += subject.score || 0;
+      });
+      if (score !== 100) {
+        return this.error('问卷总分值错误');
+      }
+      quiz.id = await this.getId('quiz_id');
+      quiz.creator = await this.getUser();
+      quiz.status = 'pending';
+      quiz = await quiz.save();
 
       this.success({
-        id: article.id,
+        id: quiz.id,
       });
     } catch (err) {
       this.logger.error(err);
-      this.error('Create Article Failed');
+      this.error('Create Quiz Failed');
     }
   }
 
@@ -113,14 +104,18 @@ class ArticleController extends Controller {
     if (!this.ctx.params.id) {
       return this.error('缺少参数');
     }
+    const actor = await this.getUser(true);
+    if (this.roleRank(actor.role) < 3) {
+      return this.error('没有操作权限');
+    }
     try {
-      const article = await this.ctx.model.Article.findOne({
+      const quiz = await this.ctx.model.Quiz.findOne({
         id: this.ctx.params.id,
       });
-      this.success(article);
+      this.success(quiz);
     } catch (err) {
       this.logger.error(err);
-      this.error('获取文章失败！');
+      this.error('获取问卷失败！');
     }
   }
 
@@ -130,9 +125,19 @@ class ArticleController extends Controller {
 
       const data = this.ctx.request.body;
 
+      let score = 0;
+      data.subjects.forEach((subject, index) => {
+        const line = subject;
+        line.idx = index + 1;
+        score += subject.score || 0;
+      });
+      if (score !== 100) {
+        return this.error('问卷总分值错误');
+      }
+
       const actor = await this.getUser(true);
 
-      const old = await this.ctx.model.Article.findOne({
+      const old = await this.ctx.model.Quiz.findOne({
         id: data.id,
       });
 
@@ -141,34 +146,33 @@ class ArticleController extends Controller {
       }
 
       if (data.status === 'audited' && this.roleRank(actor.role) < 3) {
-        return this.error('已审核通过的文章无法修改');
+        return this.error('已审核通过的问卷无法修改');
       }
 
       data.status = 'pending';
 
-      const repeat = await this.ctx.model.Article.find({
+      const repeat = await this.ctx.model.Quiz.find({
         id: {
           $ne: data.id,
         },
         title: this.ctx.request.body.title,
       });
       if (repeat.length > 0) {
-        return this.error('文章标题已被使用');
+        return this.error('该问卷标题已被使用');
       }
 
       data.updater = await this.getUser();
-
       data.update_time = Date.now();
 
-      const article = await this.ctx.model.Article.findOneAndUpdate({
+      const quiz = await this.ctx.model.Quiz.findOneAndUpdate({
         id: data.id,
       }, data, {
         new: true,
       });
-      this.success(article);
+      this.success(quiz);
     } catch (err) {
       this.logger.error(err);
-      return this.error('更新文章失败');
+      return this.error('更新问卷失败');
     }
   }
 
@@ -179,18 +183,18 @@ class ArticleController extends Controller {
 
     const actor = await this.getUser(true);
 
-    if (this.roleRank(actor.role) < 3) {
+    if (this.roleRank(actor.role) < 4) {
       return this.error('无权进行该操作');
     }
 
     try {
-      await this.ctx.model.Article.remove({
+      await this.ctx.model.Quiz.remove({
         id: this.ctx.params.id,
       });
-      this.success('文章删除成功');
+      this.success('问卷删除成功');
     } catch (err) {
       this.logger.error(err);
-      this.error('文章删除失败！');
+      this.error('问卷删除失败！');
     }
   }
 
@@ -205,7 +209,7 @@ class ArticleController extends Controller {
 
       const actor = await this.getUser(true);
 
-      const old = await this.ctx.model.Article.findOne({
+      const old = await this.ctx.model.Quiz.findOne({
         id: data.id,
       });
 
@@ -223,7 +227,7 @@ class ArticleController extends Controller {
 
       old.update_time = Date.now();
 
-      const article = await this.ctx.model.Article.findOneAndUpdate({
+      const quiz = await this.ctx.model.Quiz.findOneAndUpdate({
         id: old.id,
       }, old, {
         new: true,
@@ -233,9 +237,8 @@ class ArticleController extends Controller {
       });
     } catch (err) {
       this.logger.error(err);
-      return this.error('操作文章失败');
+      return this.error('操作问卷失败');
     }
   }
-
 }
-module.exports = ArticleController;
+module.exports = QuizController;

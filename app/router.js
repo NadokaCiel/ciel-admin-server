@@ -32,6 +32,13 @@ module.exports = app => {
   router.post('petType', '/api/freezePetType/:id', checkLogin, 'petType.freeze');
   router.post('petType', '/api/unfreezePetType/:id', checkLogin, 'petType.unfreeze');
 
+  /** ———— 问卷相关 ———— **/
+  router.resources('subject', '/api/subject', checkLogin, 'quiz.subject');
+  router.get('subject', '/api/subjectOption', 'quiz.subject.option');
+  router.resources('quiz', '/api/quiz', checkLogin, 'quiz.quiz');
+  router.put('quiz', '/api/quiz/:id/status', checkLogin, 'quiz.quiz.status');
+  /** ———— 问卷相关 END ———— **/
+
   /** ———— 游戏相关 ———— **/
   // 物品系统相关
   router.resources('item', '/api/item', checkLogin, 'item.item');
@@ -48,10 +55,18 @@ module.exports = app => {
   router.get('race', '/api/raceOption', 'enum.race.option');
   /** ———— 游戏相关 END ———— **/
 
-  // 小程序相关
+  /** ———— 小程序相关 ———— **/
+  // 登录相关
   router.post('mini-ticket', '/mini/ticket', 'ticket.createTicket');
+
+  // 文章相关
   router.post('mini-article', '/mini/article/list', checkTicket, 'miniapp.article.index');
   router.post('mini-article', '/mini/article/view/:id', checkTicket, 'miniapp.article.show');
+
+  // 问卷相关
+  router.post('mini-quiz', '/mini/quiz/list', checkTicket, 'miniapp.quiz.index');
+  router.post('mini-quiz', '/mini/quiz/view/:id', checkTicket, 'miniapp.quiz.show');
+  /** ———— 小程序相关 END ———— **/
 
   app.use(serve({ rootDir: 'app/public', rootPath: '/public' }));
 };

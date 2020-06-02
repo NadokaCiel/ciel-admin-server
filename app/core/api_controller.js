@@ -131,6 +131,8 @@ class ApiController extends Controller {
       status: 'error',
       msg: msg || '未知错误。',
     };
+
+    this.logger.error(this.ctx);
   }
 
   unauthorized(msg, retcode = 40000) {
