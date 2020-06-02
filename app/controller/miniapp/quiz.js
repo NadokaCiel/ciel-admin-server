@@ -45,10 +45,51 @@ class QuizController extends Controller {
       const quiz = await this.ctx.model.Quiz.findOne({
         id: this.ctx.params.id,
       });
+      if (quiz.status !== 'audited') {
+        return this.error('没有查看权限');
+      }
       this.success(quiz);
     } catch (err) {
       this.logger.error(err);
       this.error('获取全卷失败！');
+    }
+  }
+
+  async correct() {
+    if (!this.ctx.params.id) {
+      return this.error('缺少参数');
+    }
+    const {
+      body,
+    } = this.ctx.request;
+
+    const { sheet } = body;
+    console.log('body', this.ctx.body)
+    console.log('sheet', sheet)
+    try {
+      const quiz = await this.ctx.model.Quiz.findOne({
+        id: this.ctx.params.id,
+      });
+      if (quiz.status !== 'audited') {
+        return this.error('非法试卷');
+      }
+      const { subjects } = quiz;
+      let totalScore = 0;
+      subjects.forEach(subject => {
+        if (!sheet[subject.id]) return;
+        const origionA = subject.answer.join(',');
+        const sheetA = sheet[subject.id].join(',');
+        if (origionA === sheetA) {
+          totalScore += subject.score;
+        }
+      });
+      this.success({
+        quiz,
+        score: totalScore,
+      });
+    } catch (err) {
+      this.logger.error(err);
+      this.error('提交试卷失败！');
     }
   }
 

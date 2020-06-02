@@ -66,6 +66,7 @@ module.exports = app => {
   // 问卷相关
   router.post('mini-quiz', '/mini/quiz/list', checkTicket, 'miniapp.quiz.index');
   router.post('mini-quiz', '/mini/quiz/view/:id', checkTicket, 'miniapp.quiz.show');
+  router.post('mini-quiz', '/mini/quiz/correct/:id', checkTicket, 'miniapp.quiz.correct');
   /** ———— 小程序相关 END ———— **/
 
   app.use(serve({ rootDir: 'app/public', rootPath: '/public' }));

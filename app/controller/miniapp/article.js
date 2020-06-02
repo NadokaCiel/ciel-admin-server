@@ -45,6 +45,9 @@ class ArticleController extends Controller {
       const article = await this.ctx.model.Article.findOne({
         id: this.ctx.params.id,
       });
+      if (article.status !== 'audited') {
+        return this.error('没有查看权限');
+      }
       this.success(article);
     } catch (err) {
       this.logger.error(err);
