@@ -9,7 +9,7 @@ module.exports = app => {
     },
     nowId: {
       type: Number,
-      default: 2,
+      default: 1,
     },
     create_time: {
       type: Date,
@@ -21,7 +21,7 @@ module.exports = app => {
   });
 
   IdsSchema.index({
-    id: 2,
+    id: 1,
   });
 
   return mongoose.model('Ids', IdsSchema);

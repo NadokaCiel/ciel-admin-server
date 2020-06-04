@@ -240,5 +240,32 @@ class QuizController extends Controller {
       return this.error('操作问卷失败');
     }
   }
+
+  async qrcode() {
+    if (!this.ctx.params.id) {
+      return this.error('缺少参数');
+    }
+
+    const actor = await this.getUser(true);
+
+    if (this.roleRank(actor.role) < 3) {
+      return this.error('无权进行该操作');
+    }
+
+    try {
+      const result = await this.service.weapp.qrcode({
+        scene: `id=${this.ctx.params.id}`,
+        page: 'pages/quiz/index/quiz',
+      });
+      if (result.url) {
+        this.success(result);
+      } else {
+        this.error(result);
+      }
+    } catch (err) {
+      this.logger.error(err);
+      this.error('获取二维码失败！');
+    }
+  }
 }
 module.exports = QuizController;

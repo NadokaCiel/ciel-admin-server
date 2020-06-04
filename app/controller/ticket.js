@@ -26,10 +26,12 @@ class TicketController extends Controller {
 
       const data = result.data;
 
-      // console.log('result', result);
+      await this.ctx.service.wxuser.save({
+        openid: data.openid,
+      });
 
       const now = Date.now() + '';
-      const ticket = this.encryption(data.oepnid + now);
+      const ticket = this.encryption(data.openid + now);
 
       await this.app.redis.set(ticket, data.session_key, 'EX', 7 * 24 * 60 * 60 * 1000);
       return this.success({

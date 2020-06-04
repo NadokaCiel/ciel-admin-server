@@ -37,6 +37,7 @@ module.exports = app => {
   router.get('subject', '/api/subjectOption', 'quiz.subject.option');
   router.resources('quiz', '/api/quiz', checkLogin, 'quiz.quiz');
   router.put('quiz', '/api/quiz/:id/status', checkLogin, 'quiz.quiz.status');
+  router.put('quiz', '/api/quiz/:id/qrcode', checkLogin, 'quiz.quiz.qrcode');
   /** ———— 问卷相关 END ———— **/
 
   /** ———— 游戏相关 ———— **/
