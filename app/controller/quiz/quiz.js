@@ -48,6 +48,8 @@ const statusMap = {
   failed: '审核失败',
 };
 
+const WEAPP_QUIZ_PATH = 'pages/quiz/index/quiz';
+
 const Controller = require('../../core/api_controller');
 class QuizController extends Controller {
 
@@ -242,7 +244,8 @@ class QuizController extends Controller {
   }
 
   async qrcode() {
-    if (!this.ctx.params.id) {
+    const { id } = this.ctx.params;
+    if (!id) {
       return this.error('缺少参数');
     }
 
@@ -254,15 +257,32 @@ class QuizController extends Controller {
 
     try {
       const result = await this.service.weapp.qrcode({
-        scene: `id=${this.ctx.params.id}`,
-        page: 'pages/quiz/index/quiz',
+        scene: `id=${id}`,
+        page: WEAPP_QUIZ_PATH,
       });
       if (result.url) {
+        const quiz = await this.ctx.model.Quiz.findOne({
+          id,
+        });
+
+        quiz.qrcode_url = result.url;
+
+        quiz.updater = await this.getUser();
+        quiz.update_time = Date.now();
+
+        await this.ctx.model.Quiz.findOneAndUpdate({
+          id: quiz.id,
+        }, quiz, {
+          new: true,
+        });
+
         this.success(result);
       } else {
         this.error(result);
       }
     } catch (err) {
+      // console.log("---------------------------- qrcode made err ----------------------------");
+      // console.log(err);
       this.logger.error(err);
       this.error('获取二维码失败！');
     }

@@ -65,9 +65,9 @@ class ImageController extends Controller {
     mkdirPath(originPath);
     const target = path.join(originPath, filename);
     const writeStream = fs.createWriteStream(target);
-    console.log('-----------获取表单中其它数据 start--------------');
-    console.log(stream.fields);
-    console.log('-----------获取表单中其它数据 end--------------');
+    // console.log('-----------获取表单中其它数据 start--------------');
+    // console.log(stream.fields);
+    // console.log('-----------获取表单中其它数据 end--------------');
     try {
       console.log('filename', filename);
       //异步把文件流 写入

@@ -32,38 +32,23 @@ function mkdirPath(pathStr) {
   return projectPath;
 }
 
-const originPath = 'app/public/qrcode';
+const originPath = 'app/public';
 
 class ImageService extends Service {
 
-  async save(name, buffer) {
+  async save(name, route = "/upload", buffer) {
     try {
-      // const base64Img = buffer.toString('base64');
-      // console.log(base64Img);
-      // const decodeImg = Buffer.from(base64Img, 'base64');
-      // const stream = fs.createReadStream(decodeImg);
       const filename = Date.now() + randomString(4) + path.extname(name).toLocaleLowerCase() + '.png';
-      mkdirPath(originPath);
-      const target = path.join(originPath, filename);
-      // console.log("---------------------------- image target ----------------------------");
-      // console.log(target);
-      // const writeStream = fs.createWriteStream(target);
-      // console.log('filename', filename);
-      // const stream = fs.createReadStream(buffer);
-      // await awaitReadStream(stream); 
-      // console.log("---------------------------- image stream ----------------------------");
-      // console.log(stream);
-      // // //异步把文件流 写入
-      // await awaitWriteStream(stream.pipe(writeStream));
+      mkdirPath(originPath + route);
+      const target = path.join(originPath + route, filename);
       const base64Img = buffer.toString('base64');
-      const decodeImg = new Buffer(base64Img, 'base64');
+      const decodeImg = Buffer.from(base64Img, 'base64');
       await fs.writeFileSync(target, decodeImg);
       let image = new this.ctx.model.Image({
-        url: '/public/qrcode/' + filename,
+        url: `/public${route}/${filename}`,
         name: filename,
       });
       image.id = await this.service.ids.getId('image_id');
-      // image.creator = await this.getUser();
       image = await image.save();
       // 自定义方法
       return({

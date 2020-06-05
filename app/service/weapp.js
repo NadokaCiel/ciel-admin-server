@@ -28,26 +28,31 @@ class WeappService extends Service {
       const token = await this.token();
       // console.log("---------------------------- qrcode config ----------------------------");
       // console.log(opt)
-      // const result = await this.ctx.curl(`https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=${token}`, {
-      //   method: 'POST',
-      //   data: {
-      //     scene: opt.scene,
-      //     page: opt.page,
-      //     access_token: token,
-      //   },
-      //   dataType: 'json',
-      // });
-      const result = await this.ctx.curl(`https://api.weixin.qq.com/wxa/getwxacode?access_token=${token}`, {
+      const result = await this.ctx.curl(`https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=${token}`, {
         method: 'POST',
+        contentType: 'json',
         data: {
-          path: `${opt.page}?${opt.scene}`,
-          access_token: token,
+          scene: opt.scene,
+          path: opt.page,
+          // access_token: token,
         },
         // dataType: 'json',
       });
+      // const result = await this.ctx.curl(`https://api.weixin.qq.com/wxa/getwxacode?access_token=${token}`, {
+      //   method: 'POST',
+      //   contentType: 'json',
+      //   data: {
+      //     path: `${opt.page}?${opt.scene}`,
+      //     // access_token: token,
+      //   },
+      //   // dataType: 'json',
+      // });
       // console.log("---------------------------- qrcode result ----------------------------");
       // console.log(result)
-      const image = await this.service.image.save(opt.scene, result.data)
+      // console.log("---------------------------- qrcode buffer ----------------------------");
+      // console.log(result.data)
+      // console.log(result.data.toString())
+      const image = await this.service.image.save(opt.scene, '/qrcode', result.data)
       // console.log("---------------------------- qrcode image ----------------------------");
       // console.log(image)
       return image;

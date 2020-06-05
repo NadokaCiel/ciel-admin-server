@@ -15,6 +15,9 @@ module.exports = app => {
     cover: {
       type: String,
     },
+    qrcode_url: {
+      type: String,
+    },
     subjects: {
       type: Array,
     },
