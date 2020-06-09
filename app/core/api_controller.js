@@ -124,10 +124,11 @@ class ApiController extends Controller {
     };
   }
 
-  error(msg, retcode = 40001) {
+  error(msg, retcode = 40001, data = {}) {
 
     this.ctx.body = {
       retcode,
+      data,
       status: 'error',
       msg: msg || '未知错误。',
     };

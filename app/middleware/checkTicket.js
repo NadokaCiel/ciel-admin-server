@@ -17,8 +17,8 @@ module.exports = () => {
       };
       return;
     }
-    const redis_ticket = await ctx.app.redis.get(ticket);
-    if (!redis_ticket) {
+    const redis_session = await ctx.app.redis.get(ticket);
+    if (!redis_session) {
       ctx.body = {
         retcode: 41000,
         status: 'unauthorized',

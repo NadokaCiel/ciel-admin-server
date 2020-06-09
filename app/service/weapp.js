@@ -14,8 +14,6 @@ class WeappService extends Service {
       await this.app.redis.set("access_token", data.access_token, 'EX', data.expires_in / 2);
       return data.access_token;
     } catch (err) {
-      // console.log("---------------------------- token err ----------------------------");
-      // console.log(err)
       this.logger.error(err);
       return null;
     }
@@ -26,39 +24,44 @@ class WeappService extends Service {
   }) {
     try {
       const token = await this.token();
-      // console.log("---------------------------- qrcode config ----------------------------");
-      // console.log(opt)
       const result = await this.ctx.curl(`https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=${token}`, {
         method: 'POST',
         contentType: 'json',
         data: {
           scene: opt.scene,
-          path: opt.page,
-          // access_token: token,
+          page: opt.page,
         },
         // dataType: 'json',
       });
-      // const result = await this.ctx.curl(`https://api.weixin.qq.com/wxa/getwxacode?access_token=${token}`, {
-      //   method: 'POST',
-      //   contentType: 'json',
-      //   data: {
-      //     path: `${opt.page}?${opt.scene}`,
-      //     // access_token: token,
-      //   },
-      //   // dataType: 'json',
-      // });
-      // console.log("---------------------------- qrcode result ----------------------------");
-      // console.log(result)
-      // console.log("---------------------------- qrcode buffer ----------------------------");
-      // console.log(result.data)
-      // console.log(result.data.toString())
       const image = await this.service.image.save(opt.scene, '/qrcode', result.data)
-      // console.log("---------------------------- qrcode image ----------------------------");
-      // console.log(image)
       return image;
     } catch (err) {
-      // console.log('---------------------------- qrcode err ----------------------------')
-      // console.log(err)
+      this.logger.error(err);
+      return null;
+    }
+  }
+
+  async openid(token) {
+    try {
+      let ticket = token;
+      if (!ticket) {
+        ticket = this.ctx.request.body.ticket;
+      }
+      if (!ticket) {
+        return {
+          retcode: 41000,
+          msg: 'ticket已失效',
+        }
+      }
+      const openid = await this.app.redis.get(ticket + 'openid');
+      if (!openid) {
+        return {
+          retcode: 41000,
+          msg: 'ticket已失效',
+        }
+      }
+      return openid;
+    } catch (err) {
       this.logger.error(err);
       return null;
     }

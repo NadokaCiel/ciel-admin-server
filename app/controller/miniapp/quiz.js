@@ -16,7 +16,7 @@ class QuizController extends Controller {
       const size = Number(body.size) || 10;
       const page = body.page || 1;
       const offset = Number((page - 1) * size);
-      const filter = ' -_id -__v';
+      const filter = ' -_id -__v -subjects';
       const params = {
         status: 'audited',
       };
@@ -42,12 +42,25 @@ class QuizController extends Controller {
       return this.error('缺少参数');
     }
     try {
+      // 检查用户是否做过该问卷
+      const result = await this.service.transcript.ifDuplicate(this.ctx.params.id);
+
+      if (result && result.msg) {
+        this.error(result.msg, result.retcode, result.data);
+        return;
+      }
+
       const quiz = await this.ctx.model.Quiz.findOne({
         id: this.ctx.params.id,
       });
       if (quiz.status !== 'audited') {
         return this.error('没有查看权限');
       }
+      // 去除答案数据
+      quiz.subjects.forEach(subject => {
+        delete subject.answer;
+        subject.options.forEach(option => delete option.isTrue);
+      });
       this.success(quiz);
     } catch (err) {
       this.logger.error(err);
@@ -63,7 +76,7 @@ class QuizController extends Controller {
       body,
     } = this.ctx.request;
 
-    const { sheet } = body;
+    const { sheet, user_name, user_avatar } = body;
     console.log('body', this.ctx.body)
     console.log('sheet', sheet)
     try {
@@ -83,15 +96,41 @@ class QuizController extends Controller {
           totalScore += subject.score;
         }
       });
-      this.success({
-        quiz,
+
+      const option = {
+        quiz_id: this.ctx.params.id,
+        user_name,
+        user_avatar,
+        sheet,
         score: totalScore,
-      });
+      };
+
+      const transcript = await this.service.transcript.save(option);
+
+      if (transcript && transcript.msg) {
+        this.error(transcript.msg, transcript.retcode, transcript.data);
+        return;
+      }
+
+      this.success(transcript);
     } catch (err) {
       this.logger.error(err);
       this.error('提交试卷失败！');
     }
   }
 
+  async result() {
+    if (!this.ctx.params.id) {
+      return this.error('缺少参数');
+    }
+
+    try {
+      const transcript = await this.service.transcript.find(this.ctx.params.id);
+      this.success(transcript);
+    } catch (err) {
+      this.logger.error(err);
+      this.error('获取结果失败！');
+    }
+  }
 }
 module.exports = QuizController;

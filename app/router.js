@@ -38,6 +38,7 @@ module.exports = app => {
   router.resources('quiz', '/api/quiz', checkLogin, 'quiz.quiz');
   router.put('quiz', '/api/quiz/:id/status', checkLogin, 'quiz.quiz.status');
   router.put('quiz', '/api/quiz/:id/qrcode', checkLogin, 'quiz.quiz.qrcode');
+  router.get('quiz', '/api/quiz/:id/result', checkLogin, 'quiz.quiz.result');
   /** ———— 问卷相关 END ———— **/
 
   /** ———— 游戏相关 ———— **/
@@ -68,6 +69,7 @@ module.exports = app => {
   router.post('mini-quiz', '/mini/quiz/list', checkTicket, 'miniapp.quiz.index');
   router.post('mini-quiz', '/mini/quiz/view/:id', checkTicket, 'miniapp.quiz.show');
   router.post('mini-quiz', '/mini/quiz/correct/:id', checkTicket, 'miniapp.quiz.correct');
+  router.post('mini-quiz', '/mini/quiz/result/:id', checkTicket, 'miniapp.quiz.result');
   /** ———— 小程序相关 END ———— **/
 
   app.use(serve({ rootDir: 'app/public', rootPath: '/public' }));

@@ -257,7 +257,7 @@ class QuizController extends Controller {
 
     try {
       const result = await this.service.weapp.qrcode({
-        scene: `id=${id}`,
+        scene: id,
         page: WEAPP_QUIZ_PATH,
       });
       if (result.url) {
@@ -285,6 +285,22 @@ class QuizController extends Controller {
       // console.log(err);
       this.logger.error(err);
       this.error('获取二维码失败！');
+    }
+  }
+
+  async result() {
+    const { id } = this.ctx.params;
+    if (!id) {
+      return this.error('缺少参数');
+    }
+
+    const actor = await this.getUser(true);
+    if (this.roleRank(actor.role) < 3) {
+      return this.error('仅限管理员使用该功能');
+    } else {
+      await this.repackList('Transcript', null, null, {
+        quiz_id: id,
+      });
     }
   }
 }

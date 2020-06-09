@@ -5,3 +5,5 @@
 40003    sign error
 
 41000    ticket error
+
+42000    duplicate error

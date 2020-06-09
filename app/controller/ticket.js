@@ -34,6 +34,7 @@ class TicketController extends Controller {
       const ticket = this.encryption(data.openid + now);
 
       await this.app.redis.set(ticket, data.session_key, 'EX', 7 * 24 * 60 * 60 * 1000);
+      await this.app.redis.set(ticket + 'openid', data.openid, 'EX', 7 * 24 * 60 * 60 * 1000);
       return this.success({
         openid: data.openid,
         unionid: data.unionid,
