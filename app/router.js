@@ -38,7 +38,9 @@ module.exports = app => {
   router.resources('quiz', '/api/quiz', checkLogin, 'quiz.quiz');
   router.put('quiz', '/api/quiz/:id/status', checkLogin, 'quiz.quiz.status');
   router.put('quiz', '/api/quiz/:id/qrcode', checkLogin, 'quiz.quiz.qrcode');
-  router.get('quiz', '/api/quiz/:id/result', checkLogin, 'quiz.quiz.result');
+  router.get('quiz', '/api/quiz/:id/result', checkLogin, 'quiz.quiz.resultList');
+  router.get('quiz', '/api/quiz/result/:id', checkLogin, 'quiz.quiz.result');
+  router.delete('quiz', '/api/quiz/result/:id', checkLogin, 'quiz.quiz.resultRemove');
   /** ———— 问卷相关 END ———— **/
 
   /** ———— 游戏相关 ———— **/

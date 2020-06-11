@@ -288,7 +288,7 @@ class QuizController extends Controller {
     }
   }
 
-  async result() {
+  async resultList() {
     const { id } = this.ctx.params;
     if (!id) {
       return this.error('缺少参数');
@@ -301,6 +301,47 @@ class QuizController extends Controller {
       await this.repackList('Transcript', null, null, {
         quiz_id: id,
       });
+    }
+  }
+
+  async result() {
+    const { id } = this.ctx.params;
+    if (!id) {
+      return this.error('缺少参数');
+    }
+
+    const actor = await this.getUser(true);
+    if (this.roleRank(actor.role) < 3) {
+      return this.error('仅限管理员使用该功能');
+    }
+    try {
+      const result = await this.service.transcript.find(this.ctx.params.id);
+      this.success(result);
+    } catch (err) {
+      this.logger.error(err);
+      this.error('获取答卷失败！');
+    }
+  }
+
+  async resultRemove() {
+    if (!this.ctx.params.id) {
+      return this.error('缺少参数');
+    }
+
+    const actor = await this.getUser(true);
+
+    if (this.roleRank(actor.role) < 4) {
+      return this.error('无权进行该操作');
+    }
+
+    try {
+      await this.ctx.model.Transcript.remove({
+        id: this.ctx.params.id,
+      });
+      this.success('答卷删除成功');
+    } catch (err) {
+      this.logger.error(err);
+      this.error('答卷删除失败！');
     }
   }
 }

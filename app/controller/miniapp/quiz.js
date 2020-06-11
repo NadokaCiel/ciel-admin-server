@@ -94,6 +94,8 @@ class QuizController extends Controller {
         const sheetA = sheet[subject.id].join(',');
         if (origionA === sheetA) {
           totalScore += subject.score;
+        } else if (origionA.indexOf(sheetA) >= 0){
+          totalScore += (subject.score * 0.5);
         }
       });
 
