@@ -18,6 +18,7 @@ module.exports = app => {
   // 管理系统相关
   router.resources('user', '/api/user', checkLogin, 'user');
   router.post('user', '/api/user', checkLogin, 'user.createAccount');
+  router.put('user', '/api/user/:id/status', checkLogin, 'user.status');
   router.put('password', '/api/password', checkLogin, 'password.update');
   router.resources('token', '/api/token', 'token');
 

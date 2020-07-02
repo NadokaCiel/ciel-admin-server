@@ -7,3 +7,7 @@
 41000    ticket error
 
 42000    duplicate error
+
+43000    user frozen
+
+44000    user not exist

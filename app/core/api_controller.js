@@ -54,6 +54,9 @@ class ApiController extends Controller {
         let new_ids = new this.ctx.model.Ids({
           name: type,
         });
+        if (type === 'user_id' && new_ids.nowId === 1) {
+          new_ids.nowId++;
+        }
         new_ids = await new_ids.save();
         return new_ids.nowId;
       }

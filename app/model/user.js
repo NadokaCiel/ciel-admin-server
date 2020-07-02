@@ -30,6 +30,9 @@ module.exports = app => {
       type: Array,
       default: [],
     },
+    status: {
+      type: String,
+    },
   });
 
   UserSchema.index({
@@ -44,4 +47,9 @@ module.exports = app => {
 //   admin: '管理员',
 //   superadmin: '超级管理员',
 //   visitor: '访客',
+// };
+
+// const statusMap = {
+//   frozen: '已冻结',
+//   normal: '正常',
 // };

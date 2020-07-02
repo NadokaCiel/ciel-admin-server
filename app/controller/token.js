@@ -27,6 +27,11 @@ class TokenController extends Controller {
       if (!user) {
         return this.error('用户不存在！');
       }
+
+      if (user.status === 'frozen') {
+        return this.error('该账户已被冻结', 43000);
+      }
+
       if (user.password !== this.encryption(this.ctx.request.body.password)) {
         return this.error('密码错误！');
       }

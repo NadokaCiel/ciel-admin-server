@@ -28,6 +28,28 @@ module.exports = () => {
       return;
     }
 
+    const user = await ctx.model.User.findOne({
+      id,
+    });
+
+    if (!user) {
+      ctx.body = {
+        retcode: 44000,
+        status: 'unauthorized',
+        msg: '用户不存在',
+      };
+      return;
+    }
+
+    if (user.status === 'frozen') {
+      ctx.body = {
+        retcode: 43000,
+        status: 'frozen',
+        msg: '您的账户已被冻结，无法使用',
+      };
+      return;
+    }
+
     await ctx.model.User.findOneAndUpdate({
       id,
     }, {
