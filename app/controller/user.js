@@ -95,7 +95,15 @@ class UserController extends Controller {
         // this.ctx.status = 200
       } else {
         const user = await this.getUser(true);
-        this.success(user);
+        const signin = await this.service.signin.findByUserId(user.id);
+        let serial = 0;
+        if (signin && signin.serial) {
+          serial = signin.serial;
+        }
+        this.success({
+          user,
+          serial,
+        });
       }
     } catch (err) {
       this.logger.error(err);

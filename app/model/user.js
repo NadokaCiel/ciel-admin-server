@@ -33,6 +33,13 @@ module.exports = app => {
     status: {
       type: String,
     },
+    ccoin: {
+      type: Number,
+    },
+    signed: {
+      type: Boolean,
+      default: false,
+    },
   });
 
   UserSchema.index({

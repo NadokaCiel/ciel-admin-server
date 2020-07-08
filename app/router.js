@@ -11,6 +11,7 @@ module.exports = app => {
 
   // 基础数据
   router.get('common', '/api/common', checkLogin, 'common.index');
+  router.get('common', '/api/common/signin', checkLogin, 'common.signin');
 
   // 微博数据服务
   router.get('weibo', '/api/weibo', checkLogin, 'weibo.index');
