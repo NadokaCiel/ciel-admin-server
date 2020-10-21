@@ -105,7 +105,7 @@ class ArticleController extends Controller {
       });
     } catch (err) {
       this.logger.error(err);
-      this.error('Create Article Failed');
+      this.error('创建文章失败！');
     }
   }
 

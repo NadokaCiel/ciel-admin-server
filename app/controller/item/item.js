@@ -17,6 +17,10 @@ const createRule = {
     type: 'number',
     required: true,
   },
+  price: {
+    type: 'number',
+    required: false,
+  },
   mark: {
     type: 'string',
     required: false,
@@ -47,6 +51,10 @@ const updateRule = {
   stack: {
     type: 'number',
     required: true,
+  },
+  price: {
+    type: 'number',
+    required: false,
   },
   mark: {
     type: 'string',

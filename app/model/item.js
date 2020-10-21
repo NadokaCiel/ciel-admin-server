@@ -20,6 +20,10 @@ module.exports = app => {
       type: Number,
       default: 1,
     },
+    price: {
+      type: Number,
+      default: 10,
+    },
     mark: {
       type: String,
     },
