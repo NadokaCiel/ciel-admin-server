@@ -34,7 +34,7 @@ class ApiController extends Controller {
 
       const doc = model[modelName];
 
-      const arr = await doc.find(params).select(filter).skip(offset)
+      const arr = await doc.find(params).sort('field -update_time -create_time').select(filter).skip(offset)
         .limit(size);
       const count = await doc.count();
       this.success(this.makeList(arr, count));

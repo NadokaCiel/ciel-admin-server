@@ -35,10 +35,9 @@ class GameToolService extends Service {
       raceId: old_character.raceId,
       classId,
     });
-    const updated_character = await this.service.character.save({
-      id: characterId,
-      ...character,
-    });
+
+    character.id = characterId;
+    const updated_character = await this.service.character.save(character);
 
     return updated_character;
   }
