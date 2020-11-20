@@ -11,3 +11,5 @@
 43000    user frozen
 
 44000    user not exist
+
+45000    user signed

@@ -29,7 +29,7 @@ class CommonController extends Controller {
     try {
       const user = await this.getUser(true);
       if (user.signed) {
-        return this.error('今日已签到');
+        return this.error('今日已签到', 45000);
       }
       const result = await this.service.signin.doSignin(user.id);
       this.success(result);
