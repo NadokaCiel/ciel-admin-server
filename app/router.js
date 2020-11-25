@@ -61,9 +61,16 @@ module.exports = app => {
   router.get('race', '/api/raceOption', 'enum.race.option');
   /** ———— 游戏相关 END ———— **/
 
+  // 小程序配置相关
+  router.get('config', '/api/miniapp/config', checkLogin, 'config.info');
+  router.put('config', '/api/miniapp/config', checkLogin, 'config.update');
+
   /** ———— 小程序相关 ———— **/
   // 登录相关
   router.post('mini-ticket', '/mini/ticket', 'ticket.createTicket');
+
+  // AI配置相关
+  router.post('mini-ai', '/mini/config', checkTicket, 'miniapp.config.show');
 
   // 文章相关
   router.post('mini-article', '/mini/article/list', checkTicket, 'miniapp.article.index');

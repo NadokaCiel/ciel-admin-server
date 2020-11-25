@@ -33,6 +33,16 @@ const statusMap = {
   normal: '正常',
 };
 
+/* 
+用户操作规则：
+1.只有admin及以上级别有权创建用户
+2.除superadmin以外，能创建的用户权限不能超过或等同于创建者自身的权限
+3.只有user及以上级别有权更新用户信息
+4.仅superadmin有权更改现有用户的权限级别
+5.无法变更超过自己权限级别用户的信息
+6.仅admin以上用户有权删除用户
+*/
+
 const Controller = require('../core/api_controller');
 class UserController extends Controller {
 
