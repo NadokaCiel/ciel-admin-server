@@ -4,6 +4,9 @@ module.exports = app => {
   const mongoose = app.mongoose;
   const ConfigSchema = new mongoose.Schema({
     id: Number,
+    avatar: {
+      type: String,
+    },
     ai_option: {
       type: Array,
       Required: 'option needed',
